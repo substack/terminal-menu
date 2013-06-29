@@ -157,19 +157,19 @@ Menu.prototype._drawRow = function (index) {
 
 Menu.prototype._ondataHandler = function ondata (buf) {
     var codes = [].join.call(buf, '.');
-    if (codes === '27.91.65') { // up
+    if (codes === '27.91.65' || codes === '107') { // up || k
         this.selected = (this.selected - 1 + this.items.length)
             % this.items.length
         ;
         this._drawRow(this.selected + 1);
         this._drawRow(this.selected);
     }
-    else if (codes === '27.91.66') { // down
+    else if (codes === '27.91.66' || codes === '106') { // down || j
         this.selected = (this.selected + 1) % this.items.length;
         this._drawRow(this.selected - 1);
         this._drawRow(this.selected);
     }
-    else if (codes === '3') { // ^C
+    else if (codes === '3' || codes == '113') { // ^C || q
         process.stdin.setRawMode(false);
         this.charm.reset();
         process.exit();
