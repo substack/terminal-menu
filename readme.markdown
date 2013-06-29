@@ -38,15 +38,15 @@ var createMenu = require('terminal-menu')
 
 Create a menu with `opts`:
 
-`opts.width` - menu width in columns
-`opts.x` - top-left corner x offset, default: 1
-`opts.y` - top-left corner y offset, default: 1
-`opts.fg` - foreground color, default: 'white'
-`opts.bg` - background color, default: 'blue'
-`opts.padding.left` - left padding in columns
-`opts.padding.right` - right padding in columns
-`opts.padding.top` - top padding in rows
-`opts.padding.bottom` - bottom padding in rows
+- `opts.width` - menu width in columns
+- `opts.x` - top-left corner x offset, default: 1
+- `opts.y` - top-left corner y offset, default: 1
+- `opts.fg` - foreground color, default: 'white'
+- `opts.bg` - background color, default: 'blue'
+- `opts.padding.left` - left padding in columns
+- `opts.padding.right` - right padding in columns
+- `opts.padding.top` - top padding in rows
+- `opts.padding.bottom` - bottom padding in rows
 
 ## menu.add(label)
 
