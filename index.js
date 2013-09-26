@@ -98,7 +98,6 @@ Menu.prototype.close = function () {
     this.charm.display('reset');
     this.charm.position(1, this.y + 1);
     this.charm.end();
-    process.stdin.destroy();
 };
 
 Menu.prototype.reset = function () {
