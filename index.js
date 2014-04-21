@@ -147,6 +147,11 @@ Menu.prototype._draw = function () {
         this._fillLine(this.init.y + i);
     }
     for (var i = 0; i < this.items.length; i++) this._drawRow(i);
+    
+    // reset foreground and background colors
+    this.charm.background(this.colors.bg);
+    this.charm.foreground(this.colors.fg);
+    
     for (var i = 0; i < this.padding.bottom; i++) {
         this._fillLine(this.y + i);
     }
