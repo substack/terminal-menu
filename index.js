@@ -179,14 +179,16 @@ Menu.prototype._drawRow = function (index) {
 
 Menu.prototype._ondataHandler = function ondata (buf) {
     var codes = [].join.call(buf, '.');
-    if (codes === '27.91.65' || codes === '107') { // up || k
+    // up || k || C-p
+    if (codes === '27.91.65' || codes === '107' || codes === '16') {
         this.selected = (this.selected - 1 + this.items.length)
             % this.items.length
         ;
         this._drawRow(this.selected + 1);
         this._drawRow(this.selected);
     }
-    else if (codes === '27.91.66' || codes === '106') { // down || j
+    // down || j || C-n
+    else if (codes === '27.91.66' || codes === '106' || codes === '14') {
         this.selected = (this.selected + 1) % this.items.length;
         this._drawRow(this.selected - 1);
         this._drawRow(this.selected);
