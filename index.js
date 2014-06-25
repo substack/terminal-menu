@@ -15,7 +15,7 @@ function Menu (opts) {
     self.init = { x: self.x, y: self.y };
     self.items = [];
     self.lines = {};
-    self.selected = 0;
+    self.selected = opts.selected || 0;
     self.colors = {
         fg: opts.fg || 'white',
         bg: opts.bg || 'blue'
