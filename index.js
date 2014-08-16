@@ -3,6 +3,18 @@ var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
 var resumer = require('resumer');
 
+var length = function(str) {
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+       if(str.charCodeAt(i) > 255)   {
+           len+=2;
+           continue;
+       }
+       len+=1;
+    }
+    return len;
+};
+
 module.exports = function (opts) {
     return new Menu(opts || {});
 }
@@ -173,7 +185,7 @@ Menu.prototype._drawRow = function (index) {
     
     this.charm.write(
         item.label
-        + Array(Math.max(0, this.width - item.label.length)).join(' ')
+        + Array(Math.max(0, this.width - length(item.label))).join(' ')
     );
 };
 
