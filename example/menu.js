@@ -10,6 +10,7 @@ menu.add('LEDGER BOOKINGS');
 menu.add('INDICATOR CHART METRICS');
 menu.add('BACKUP DATA TO FLOPPY DISK');
 menu.add('RESTORE FROM FLOPPY DISK');
+menu.add('欢迎来到substack的编码世界');
 menu.add('EXIT');
 
 menu.on('select', function (label) {
