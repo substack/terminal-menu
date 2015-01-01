@@ -1,32 +1,33 @@
 {
-    "name": "terminal-menu",
-    "version": "0.3.2",
-    "description": "retro ansi terminal menus for serious 80s technicolor business",
-    "main": "index.js",
-    "dependencies": {
-        "resumer": "~0.0.0",
-        "charm": "~0.1.2",
-        "inherits": "~2.0.0"
-    },
-    "scripts": {
-        "test": "tap test/*.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/substack/terminal-menu.git"
-    },
-    "homepage": "https://github.com/substack/terminal-menu",
-    "keywords": [
-        "menu",
-        "terminal",
-        "ansi",
-        "80s",
-        "ibm"
-    ],
-    "author": {
-        "name": "James Halliday",
-        "email": "mail@substack.net",
-        "url": "http://substack.net"
-    },
-    "license": "MIT"
+  "name": "terminal-menu",
+  "version": "0.3.2",
+  "description": "retro ansi terminal menus for serious 80s technicolor business",
+  "main": "index.js",
+  "dependencies": {
+    "charm": "~0.1.2",
+    "inherits": "~2.0.0",
+    "resumer": "~0.0.0",
+    "visualwidth": "0.0.1"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/terminal-menu.git"
+  },
+  "homepage": "https://github.com/substack/terminal-menu",
+  "keywords": [
+    "menu",
+    "terminal",
+    "ansi",
+    "80s",
+    "ibm"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT"
 }
