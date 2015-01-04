@@ -6,7 +6,8 @@
     "dependencies": {
         "resumer": "~0.0.0",
         "charm": "~0.1.2",
-        "inherits": "~2.0.0"
+        "inherits": "~2.0.0",
+        "visualwidth": "~0.0.1"
     },
     "scripts": {
         "test": "tap test/*.js"
