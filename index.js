@@ -2,6 +2,7 @@ var createCharm = require('charm');
 var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
 var resumer = require('resumer');
+var visualwidth = require('visualwidth');
 
 module.exports = function (opts) {
     return new Menu(opts || {});
@@ -15,7 +16,7 @@ function Menu (opts) {
     self.init = { x: self.x, y: self.y };
     self.items = [];
     self.lines = {};
-    self.selected = 0;
+    self.selected = opts.selected || 0;
     self.colors = {
         fg: opts.fg || 'white',
         bg: opts.bg || 'blue'
@@ -108,8 +109,10 @@ Menu.prototype.jump = function (name) {
     }
 };
 
-Menu.prototype.close = function () {
-    process.stdin.setRawMode(false);
+Menu.prototype.close = function (keepalive) {
+    if (!keepalive) {
+      process.stdin.setRawMode(false);
+    }
     process.stdin.removeListener('data', this._ondata);
     this.charm.cursor(true);
     this.charm.display('reset');
@@ -173,20 +176,20 @@ Menu.prototype._drawRow = function (index) {
     
     this.charm.write(
         item.label
-        + Array(Math.max(0, this.width - item.label.length)).join(' ')
+        + Array(Math.max(0, this.width - visualwidth.width(item.label, true)) + 1).join(' ') 
     );
 };
 
 Menu.prototype._ondataHandler = function ondata (buf) {
     var codes = [].join.call(buf, '.');
-    if (codes === '27.91.65' || codes === '107') { // up || k
+    if (codes === '27.91.65' || codes === '27.79.65' || codes === '107' || codes === '16') { // up || up (iOS) || k || C-p
         this.selected = (this.selected - 1 + this.items.length)
             % this.items.length
         ;
         this._drawRow(this.selected + 1);
         this._drawRow(this.selected);
     }
-    else if (codes === '27.91.66' || codes === '106') { // down || j
+    else if (codes === '27.91.66' || codes === '27.79.66' || codes === '106' || codes === '14') { // down || down (iOS) || j || C-n
         this.selected = (this.selected + 1) % this.items.length;
         this._drawRow(this.selected - 1);
         this._drawRow(this.selected);
