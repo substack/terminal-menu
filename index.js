@@ -2,6 +2,7 @@ var createCharm = require('charm');
 var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
 var resumer = require('resumer');
+var visualwidth = require('visualwidth');
 
 module.exports = function (opts) {
     return new Menu(opts || {});
@@ -175,7 +176,7 @@ Menu.prototype._drawRow = function (index) {
     
     this.charm.write(
         item.label
-        + Array(Math.max(0, this.width - item.label.length)).join(' ')
+        + Array(Math.max(0, this.width - visualwidth.width(item.label, true)) + 1).join(' ') 
     );
 };
 
