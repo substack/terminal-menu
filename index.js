@@ -181,14 +181,14 @@ Menu.prototype._drawRow = function (index) {
 
 Menu.prototype._ondataHandler = function ondata (buf) {
     var codes = [].join.call(buf, '.');
-    if (codes === '27.91.65' || codes === '27.79.65' || codes === '107') { // up || up (iOS) || k
+    if (codes === '27.91.65' || codes === '27.79.65' || codes === '107' || codes === '16') { // up || up (iOS) || k || C-p
         this.selected = (this.selected - 1 + this.items.length)
             % this.items.length
         ;
         this._drawRow(this.selected + 1);
         this._drawRow(this.selected);
     }
-    else if (codes === '27.91.66' || codes === '27.79.66' || codes === '106') { // down || down (iOS) || j
+    else if (codes === '27.91.66' || codes === '27.79.66' || codes === '106' || codes === '14') { // down || down (iOS) || j || C-n
         this.selected = (this.selected + 1) % this.items.length;
         this._drawRow(this.selected - 1);
         this._drawRow(this.selected);
