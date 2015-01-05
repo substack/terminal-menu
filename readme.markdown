@@ -15,7 +15,9 @@ menu.write('-------------------------\n');
 
 menu.add('ADD TRANSACTION INVOICE');
 menu.add('BUSINESS INTELLIGENCE');
-menu.add('ACCOUNTS PAYABLE');
+menu.add('ACCOUNTS PAYABLE', function(label, index) {
+    console.log('I AM '+label+' AT INDEX '+index);
+});
 menu.add('LEDGER BOOKINGS');
 menu.add('INDICATOR CHART METRICS');
 menu.add('BACKUP DATA TO FLOPPY DISK');
@@ -54,9 +56,9 @@ Create a menu with `opts`:
 The menu can be driven around with the arrow keys and j/k, vi-style.
 To quit out of the menu, hit `^C` or `q`.
 
-## menu.add(label)
+## menu.add(label[, callback])
 
-Create a new selectable menu item with the string `label`.
+Create a new selectable menu item with the string `label`. The callback is optional.
 
 ## menu.write(msg)
 
