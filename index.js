@@ -204,9 +204,7 @@ Menu.prototype._ondata = function ondata (buf) {
             else bytes.splice(0, 3);
         }
         else if (/^(3|113)/.test(codes)) { // ^C or q
-            this.charm.reset();
-            this._input.end();
-            this._output.end();
+            this.close();
             bytes.shift();
         }
         else if (/^(13|10)\b/.test(codes)) { // enter
