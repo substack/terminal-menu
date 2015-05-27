@@ -204,8 +204,8 @@ Menu.prototype._ondata = function ondata (buf) {
             else bytes.splice(0, 3);
         }
         else if (/^(3|113)/.test(codes)) { // ^C or q
-            bytes.shift();
             this.close();
+            bytes.shift();
         }
         else if (/^(13|10)\b/.test(codes)) { // enter
             this.charm.position(1, this.items[this.items.length-1].y + 2);
