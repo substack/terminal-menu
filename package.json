@@ -4,12 +4,12 @@
   "description": "retro ansi terminal menus for serious 80s technicolor business",
   "main": "index.js",
   "dependencies": {
-    "charm": "~0.1.2",
-    "duplexer2": "0.0.2",
+    "charm": "^1.0.0",
+    "duplexer2": "0.1.4",
     "inherits": "~2.0.0",
     "resumer": "~0.0.0",
-    "through2": "^0.6.3",
-    "visualwidth": "~0.0.1"
+    "through2": "^2.0.0",
+    "visualwidth": "~0.1.0"
   },
   "scripts": {
     "test": "tap test/*.js"
