@@ -3,6 +3,15 @@
   "version": "2.1.1",
   "description": "retro ansi terminal menus for serious 80s technicolor business",
   "main": "index.js",
+  "files": [
+    "index.ts",
+    "index.js",
+    "index.js.map",
+    "menu.ts",
+    "menu.js",
+    "menu.js.map",
+    "README.md"
+  ],
   "dependencies": {
     "charm": "~0.1.2",
     "duplexer2": "0.0.2",
@@ -12,6 +21,7 @@
     "visualwidth": "~0.0.1"
   },
   "scripts": {
+    "prepare": "tsc",
     "test": "tap test/*.js"
   },
   "repository": {
@@ -31,5 +41,12 @@
     "email": "mail@substack.net",
     "url": "http://substack.net"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/charm": "^1.0.1",
+    "@types/duplexer2": "^0.1.1",
+    "@types/node": "^10.5.2",
+    "@types/through2": "^2.0.33",
+    "typescript": "^2.9.2"
+  }
 }
