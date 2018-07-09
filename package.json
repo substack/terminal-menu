@@ -31,5 +31,12 @@
     "email": "mail@substack.net",
     "url": "http://substack.net"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/charm": "^1.0.1",
+    "@types/duplexer2": "^0.1.1",
+    "@types/node": "^10.5.2",
+    "@types/through2": "^2.0.33",
+    "typescript": "^2.9.2"
+  }
 }

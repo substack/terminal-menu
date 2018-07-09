@@ -2,3 +2,12 @@
 
 # Dependency
 node_modules
+
+# IDE Project Files
+.idea
+
+# Generated Files
+menu.js
+index.js
+*.map
+*.d.ts
