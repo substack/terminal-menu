@@ -59,6 +59,7 @@ export default class Menu extends EventEmitter {
 
         self.x += self.padding.left;
         self.y += self.padding.top;
+
         self.size = {
             x: self.width + self.padding.left + self.padding.right
         };
@@ -81,6 +82,7 @@ export default class Menu extends EventEmitter {
         self.charm.pipe(self._output);
 
         self.stream = self.charm.pipe(through());
+
         try {
             self.charm.display('reset');
             self.charm.display('bright');
@@ -93,11 +95,11 @@ export default class Menu extends EventEmitter {
             self.charm.cursor(false);
             self._draw();
         });
-    };
+    }
 
     createStream() {
         return duplexer(this._input, this._output);
-    };
+    }
 
     add(label: string, cb?: Function) {
         let index = this.items.length;
@@ -114,15 +116,7 @@ export default class Menu extends EventEmitter {
         });
         this._fillLine(this.y);
         this.y++;
-    };
-
-    private _fillLine(y: number) {
-        if (!this.lines[y]) {
-            this.charm.position(this.init.x, y);
-            this.charm.write(Array(1 + this.size.x).join(' '));
-            this.lines[y] = true;
-        }
-    };
+    }
 
     jump(name: string | number) {
         let index = typeof name === 'number'
@@ -140,7 +134,7 @@ export default class Menu extends EventEmitter {
             this._drawRow(prev);
             this._drawRow(index);
         }
-    };
+    }
 
     close() {
         this._input.end();
@@ -148,11 +142,25 @@ export default class Menu extends EventEmitter {
         this.charm.display('reset');
         this.charm.position(1, this.y + 1);
         this.charm.end();
-    };
+    }
 
     reset() {
         this.charm.reset();
-    };
+        this.charm.display('reset');
+        this.charm.display('bright');
+
+        this.items = [];
+        this.lines = {};
+
+        this.x = this.init.x + this.padding.left;
+        this.y = this.init.y + this.padding.top;
+
+        process.nextTick(() => {
+            this._ticked = true;
+            this.charm.cursor(false);
+            this._draw();
+        });
+    }
 
     write(msg: string) {
         this.charm.background(this.colors.bg);
@@ -172,13 +180,16 @@ export default class Menu extends EventEmitter {
                 this.y++;
             }
         }
-    };
+    }
 
     private _draw() {
         for (let i = 0; i < this.padding.top; i++) {
             this._fillLine(this.init.y + i);
         }
-        for (let i = 0; i < this.items.length; i++) this._drawRow(i);
+
+        for (let i = 0; i < this.items.length; i++) {
+            this._drawRow(i);
+        }
 
         // reset foreground and background colors
         this.charm.background(this.colors.bg);
@@ -187,7 +198,15 @@ export default class Menu extends EventEmitter {
         for (let i = 0; i < this.padding.bottom; i++) {
             this._fillLine(this.y + i);
         }
-    };
+    }
+
+    private _fillLine(y: number) {
+        if (!this.lines[y]) {
+            this.charm.position(this.init.x, y);
+            this.charm.write(Array(1 + this.size.x).join(' '));
+            this.lines[y] = true;
+        }
+    }
 
     private _drawRow(index: number) {
         index = (index + this.items.length) % this.items.length;
@@ -197,15 +216,14 @@ export default class Menu extends EventEmitter {
         if (this.selected === index) {
             this.charm.background(this.colors.fg);
             this.charm.foreground(this.colors.bg);
-        }
-        else {
+        } else {
             this.charm.background(this.colors.bg);
             this.charm.foreground(this.colors.fg);
         }
 
         let len = this.width - visualwidth.width(item.label, true) + 1;
         this.charm.write(item.label + Array(Math.max(0, len)).join(' '));
-    };
+    }
 
     private _ondata(buf: Buffer) {
         let bytes = [].slice.call(buf);
@@ -249,5 +267,5 @@ export default class Menu extends EventEmitter {
                 bytes.shift();
             }
         }
-    };
+    }
 }
