@@ -15,7 +15,12 @@ export default class Menu extends EventEmitter {
     private lines: any;
     private selected: number;
     private colors: any;
-    private padding: { left: number, right: number, top: number, bottom: number };
+    private padding: { left: number, right: number, top: number, bottom: number } = {
+        left: 2,
+        right: 2,
+        top: 1,
+        bottom: 1
+    };
     private size: any;
     private _input: any;
     private _output: any;
@@ -26,7 +31,7 @@ export default class Menu extends EventEmitter {
     constructor(opts: any) {
         super();
 
-        var self = this;
+        let self = this;
         self.width = opts.width || 50;
         self.x = opts.x || 1;
         self.y = opts.y || 1;
@@ -39,20 +44,19 @@ export default class Menu extends EventEmitter {
             bg: opts.bg || 'blue'
         };
 
-        self.padding = opts.padding || {
-            left: 2,
-            right: 2,
-            top: 1,
-            bottom: 1
-        };
-        if (typeof self.padding === 'number') {
-            self.padding = {
-                left: self.padding,
-                right: self.padding,
-                top: self.padding,
-                bottom: self.padding
-            };
+        if (opts.padding) {
+            if (typeof opts.padding === 'number') {
+                self.padding = {
+                    left: opts.padding,
+                    right: opts.padding,
+                    top: opts.padding,
+                    bottom: opts.padding
+                };
+            } else {
+                self.padding = opts.padding;
+            }
         }
+
         self.x += self.padding.left;
         self.y += self.padding.top;
         self.size = {
@@ -96,7 +100,7 @@ export default class Menu extends EventEmitter {
     };
 
     add(label: string, cb?: Function) {
-        var index = this.items.length;
+        let index = this.items.length;
         if (cb) {
             this.on('select', function (x, ix) {
                 if (ix === index) cb(x, ix);
@@ -112,7 +116,7 @@ export default class Menu extends EventEmitter {
         this.y++;
     };
 
-    _fillLine(y) {
+    private _fillLine(y: number) {
         if (!this.lines[y]) {
             this.charm.position(this.init.x, y);
             this.charm.write(Array(1 + this.size.x).join(' '));
@@ -120,8 +124,8 @@ export default class Menu extends EventEmitter {
         }
     };
 
-    jump(name) {
-        var index = typeof name === 'number'
+    jump(name: string | number) {
+        let index = typeof name === 'number'
             ? name
             : this.items
                 .map(function (item) {
@@ -130,7 +134,7 @@ export default class Menu extends EventEmitter {
                 .indexOf(name)
         ;
         if (index < 0) return;
-        var prev = this.selected;
+        let prev = this.selected;
         this.selected = index;
         if (this._ticked) {
             this._drawRow(prev);
@@ -150,14 +154,14 @@ export default class Menu extends EventEmitter {
         this.charm.reset();
     };
 
-    write(msg) {
+    write(msg: string) {
         this.charm.background(this.colors.bg);
         this.charm.foreground(this.colors.fg);
         this._fillLine(this.y);
 
-        var parts = msg.split('\n');
+        let parts = msg.split('\n');
 
-        for (var i = 0; i < parts.length; i++) {
+        for (let i = 0; i < parts.length; i++) {
             if (parts[i].length) {
                 this.charm.position(this.x, this.y);
                 this.charm.write(parts[i]);
@@ -170,24 +174,24 @@ export default class Menu extends EventEmitter {
         }
     };
 
-    _draw() {
-        for (var i = 0; i < this.padding.top; i++) {
+    private _draw() {
+        for (let i = 0; i < this.padding.top; i++) {
             this._fillLine(this.init.y + i);
         }
-        for (var i = 0; i < this.items.length; i++) this._drawRow(i);
+        for (let i = 0; i < this.items.length; i++) this._drawRow(i);
 
         // reset foreground and background colors
         this.charm.background(this.colors.bg);
         this.charm.foreground(this.colors.fg);
 
-        for (var i = 0; i < this.padding.bottom; i++) {
+        for (let i = 0; i < this.padding.bottom; i++) {
             this._fillLine(this.y + i);
         }
     };
 
-    _drawRow(index) {
+    private _drawRow(index: number) {
         index = (index + this.items.length) % this.items.length;
-        var item = this.items[index];
+        let item = this.items[index];
         this.charm.position(item.x, item.y);
 
         if (this.selected === index) {
@@ -199,43 +203,51 @@ export default class Menu extends EventEmitter {
             this.charm.foreground(this.colors.fg);
         }
 
-        var len = this.width - visualwidth.width(item.label, true) + 1;
+        let len = this.width - visualwidth.width(item.label, true) + 1;
         this.charm.write(item.label + Array(Math.max(0, len)).join(' '));
     };
 
-    _ondata(buf) {
-        var bytes = [].slice.call(buf);
+    private _ondata(buf: Buffer) {
+        let bytes = [].slice.call(buf);
         while (bytes.length) {
-            var codes = [].join.call(bytes, '.');
+            let codes = [].join.call(bytes, '.');
+
             if (/^(27.91.65|27,79.65|107|16)\b/.test(codes)) { // up or k
                 this.selected = (this.selected - 1 + this.items.length)
-                    % this.items.length
-                ;
+                    % this.items.length;
                 this._drawRow(this.selected + 1);
                 this._drawRow(this.selected);
-                if (/^107\b/.test(codes)) bytes.shift()
-                else bytes.splice(0, 3);
+
+                if (/^107\b/.test(codes)) {
+                    bytes.shift();
+                } else {
+                    bytes.splice(0, 3);
+                }
             }
+
             if (/^(27.91.66|27.79.66|106|14)\b/.test(codes)) { // down or j
                 this.selected = (this.selected + 1) % this.items.length;
                 this._drawRow(this.selected - 1);
                 this._drawRow(this.selected);
-                if (/^106\b/.test(codes)) bytes.shift()
-                else bytes.splice(0, 3);
-            }
-            else if (/^(3|113)/.test(codes)) { // ^C or q
+
+                if (/^106\b/.test(codes)) {
+                    bytes.shift();
+                } else {
+                    bytes.splice(0, 3);
+                }
+            } else if (/^(3|113)/.test(codes)) { // ^C or q
                 this.charm.reset();
                 this._input.end();
                 this._output.end();
                 bytes.shift();
-            }
-            else if (/^(13|10)\b/.test(codes)) { // enter
+            } else if (/^(13|10)\b/.test(codes)) { // enter
                 this.charm.position(1, this.items[this.items.length - 1].y + 2);
                 this.charm.display('reset');
                 this.emit('select', this.items[this.selected].label, this.selected);
                 bytes.shift();
+            } else {
+                bytes.shift();
             }
-            else bytes.shift();
         }
     };
 }
