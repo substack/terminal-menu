@@ -12,6 +12,7 @@
     "visualwidth": "~0.0.1"
   },
   "scripts": {
+    "prepare": "tsc",
     "test": "tap test/*.js"
   },
   "repository": {
