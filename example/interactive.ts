@@ -7,10 +7,10 @@ drawMenu();
 menu.on('select', handleSelection);
 
 process.stdin.pipe(menu.createStream()).pipe(process.stdout);
-process.stdin.setRawMode(true);
+process.stdin.setRawMode!(true);
 
 menu.on('close', function () {
-    process.stdin.setRawMode(false);
+    process.stdin.setRawMode!(false);
     process.stdin.end();
 });
 

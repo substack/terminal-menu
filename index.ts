@@ -1,5 +1,5 @@
-import Menu from './menu';
+import Menu, {IMenuOpts} from './menu';
 
-export = function MenuFactory(opts) {
+export = function MenuFactory(opts: IMenuOpts) {
     return new Menu(opts);
 }

@@ -2,17 +2,29 @@ import {EventEmitter} from 'events';
 import through = require('through2');
 import duplexer = require('duplexer2');
 import createCharm = require('charm');
+import {CharmInstance} from "charm";
 
 const visualwidth = require('visualwidth');
 
+export interface IMenuOpts {
+    width?: number;
+    x?: number;
+    y?: number;
+    selected?: number;
+    fg?: string;
+    bg?: string;
+    padding?: { left: number, right: number, top: number, bottom: number } | number;
+    charm?: CharmInstance;
+}
+
 export default class Menu extends EventEmitter {
 
-    private width: number;
-    private x: number;
-    private y: number;
+    private readonly width: number = 50;
+    private x: number = 1;
+    private y: number = 1;
     private init: { x: number, y: number };
-    private items: any[];
-    private lines: any;
+    private items: any[] = [];
+    private lines: any = {};
     private selected: number;
     private colors: any;
     private padding: { left: number, right: number, top: number, bottom: number } = {
@@ -22,78 +34,84 @@ export default class Menu extends EventEmitter {
         bottom: 1
     };
     private size: any;
-    private _input: any;
-    private _output: any;
-    private charm: any;
+    private readonly _input: any;
+    private readonly _output: any;
+    private charm: CharmInstance;
     private stream: any;
-    private _ticked: boolean;
+    private _ticked: boolean = false;
 
-    constructor(opts: any) {
+    constructor(opts: IMenuOpts) {
         super();
 
-        let self = this;
-        self.width = opts.width || 50;
-        self.x = opts.x || 1;
-        self.y = opts.y || 1;
-        self.init = {x: self.x, y: self.y};
-        self.items = [];
-        self.lines = {};
-        self.selected = opts.selected || 0;
-        self.colors = {
+        if (typeof opts.width === 'number') {
+            this.width = opts.width;
+        }
+
+        if (typeof opts.x === 'number') {
+            this.x = opts.x;
+        }
+
+        if (typeof opts.y === 'number') {
+            this.y = opts.y;
+        }
+
+        this.init = {x: this.x, y: this.y};
+        this.selected = opts.selected || 0;
+        this.colors = {
             fg: opts.fg || 'white',
             bg: opts.bg || 'blue'
         };
 
         if (opts.padding) {
             if (typeof opts.padding === 'number') {
-                self.padding = {
+                this.padding = {
                     left: opts.padding,
                     right: opts.padding,
                     top: opts.padding,
                     bottom: opts.padding
                 };
             } else {
-                self.padding = opts.padding;
+                this.padding = opts.padding;
             }
         }
 
-        self.x += self.padding.left;
-        self.y += self.padding.top;
+        this.x += this.padding.left;
+        this.y += this.padding.top;
 
-        self.size = {
-            x: self.width + self.padding.left + self.padding.right
+        this.size = {
+            x: this.width + this.padding.left + this.padding.right
         };
 
-        self._input = through(
-            function (buf, enc, next) {
-                self._ondata(buf);
+        this._input = through(
+            (buf, enc, next) => {
+                this._ondata(buf);
                 next();
             },
-            function () {
-                self.emit('close')
+            () => {
+                this.emit('close')
             }
         );
-        self._output = through();
-        self.charm = opts.charm || createCharm({
-            input: self._input
+        this._output = through();
+        this.charm = opts.charm || createCharm({
+            input: this._input
         } as any);
-        self.charm.on('error', function () {
+        this.charm.on('error', function () {
         });
-        self.charm.pipe(self._output);
+        this.charm.pipe(this._output);
 
-        self.stream = self.charm.pipe(through());
+        this.stream = this.charm.pipe(through());
 
         try {
-            self.charm.display('reset');
-            self.charm.display('bright');
+            this.charm.display('reset');
+            this.charm.display('bright');
         }
         catch (e) {
         }
 
-        process.nextTick(function () {
-            self._ticked = true;
-            self.charm.cursor(false);
-            self._draw();
+        process.nextTick(() => {
+            this._ticked = true;
+            this.charm.cursor(false);
+            this._draw();
         });
     }
 
@@ -101,7 +119,7 @@ export default class Menu extends EventEmitter {
         return duplexer(this._input, this._output);
     }
 
-    add(label: string, cb?: Function) {
+    add(label: string, cb?: (label: string, index: number) => void) {
         let index = this.items.length;
         if (cb) {
             this.on('select', function (x, ix) {
