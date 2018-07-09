@@ -1,8 +1,8 @@
-var Menu = require('../');
-var net = require('net');
+import Menu = require('../');
+import net = require('net');
 
-var server = net.createServer(function (stream) {
-    var menu = Menu({ width: 60, x: 4, y: 2 });
+const server = net.createServer(function (stream) {
+    const menu = Menu({ width: 60, x: 4, y: 2 });
     menu.reset();
     menu.write('SHALL WE PLAY A GAME?\n');
     menu.write('-------------------------\n');

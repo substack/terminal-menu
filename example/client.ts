@@ -1,8 +1,10 @@
-var net = require('net');
-var host = process.argv[2];
-var port = Number(process.argv[3]);
+import net = require('net');
 
-var c = net.connect(port, host);
+const host = process.argv[2];
+const port = Number(process.argv[3]);
+
+const c = net.connect(port, host);
+
 process.stdin.pipe(c).pipe(process.stdout);
 
 process.stdin.setRawMode(true);
