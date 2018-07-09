@@ -9,4 +9,3 @@ node_modules
 # Generated Files
 *.js
 *.map
-*.d.ts

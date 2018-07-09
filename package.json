@@ -3,6 +3,15 @@
   "version": "2.1.1",
   "description": "retro ansi terminal menus for serious 80s technicolor business",
   "main": "index.js",
+  "files": [
+    "index.ts",
+    "index.js",
+    "index.js.map",
+    "menu.ts",
+    "menu.js",
+    "menu.js.map",
+    "README.md"
+  ],
   "dependencies": {
     "charm": "~0.1.2",
     "duplexer2": "0.0.2",
